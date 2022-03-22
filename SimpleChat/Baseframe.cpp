@@ -5,7 +5,6 @@ Baseframe::Baseframe(QWidget *parent)
 {
 	m_ui.setupUi(this);
 	this->setWindowFlags(Qt::FramelessWindowHint);
-
 }
 
 Baseframe::~Baseframe()
@@ -28,6 +27,8 @@ void Baseframe::setWindowType(int wType)
         break;
     case hideBtnZoom:
         m_ui.btn_zoom->hide();
+        break;
+    default:
         break;
     }
 

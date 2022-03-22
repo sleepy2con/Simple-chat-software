@@ -1,4 +1,9 @@
 <RCC>
-    <qresource prefix="SimpleChat">
+    <qresource prefix="/">
+        <file>pics/close.png</file>
+        <file>pics/max.png</file>
+        <file>pics/min.png</file>
+        <file>pics/zoom.png</file>
+        <file>qss/style.qss</file>
     </qresource>
 </RCC>
