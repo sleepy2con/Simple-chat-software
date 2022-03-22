@@ -33,21 +33,21 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_min_2">
+      <widget class="QPushButton" name="btn_min">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_zoom_2">
+      <widget class="QPushButton" name="btn_zoom">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_close_2">
+      <widget class="QPushButton" name="btn_close">
        <property name="text">
         <string/>
        </property>
@@ -56,7 +56,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="bodyLayout_2"/>
+    <layout class="QVBoxLayout" name="bodyLayout"/>
    </item>
   </layout>
  </widget>

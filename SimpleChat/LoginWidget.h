@@ -3,6 +3,8 @@
 #include <QDialog>
 #include "ui_LoginWidget.h"
 
+class Baseframe;
+
 class LoginWidget : public QDialog
 {
 	Q_OBJECT
@@ -13,4 +15,5 @@ public:
 
 private:
 	Ui::LoginWidget ui;
+	Baseframe* m_baseframe;
 };
