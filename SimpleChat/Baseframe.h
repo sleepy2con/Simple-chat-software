@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BASEFRAME_H
+#define BASEFRAME_H
 
 #include <QWidget>
 #include "ui_Baseframe.h"
@@ -38,3 +39,4 @@ private:
 	QPoint      mouseStartPoint;
 	QPoint      windowTopLeftPoint;
 };
+#endif

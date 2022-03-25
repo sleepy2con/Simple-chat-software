@@ -1,4 +1,9 @@
 QWidget
 {
-	background-color:green;
+	
+}
+
+QStackedWidget
+{
+	background-color:grey;
 }

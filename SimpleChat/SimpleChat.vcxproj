@@ -21,6 +21,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -32,7 +33,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.1.3_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;sql;network;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -97,6 +98,7 @@
     <QtUic Include="SimpleChat.ui" />
     <QtMoc Include="SimpleChat.h" />
     <ClCompile Include="Baseframe.cpp" />
+    <ClCompile Include="DataBaseManager.cpp" />
     <ClCompile Include="LoginWidget.cpp" />
     <ClCompile Include="SimpleChat.cpp" />
     <ClCompile Include="main.cpp" />
@@ -106,6 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="LoginWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DataBaseManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

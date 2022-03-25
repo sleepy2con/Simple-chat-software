@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOGINWIDGET_H
+#define LOGINWIDGET_H
 
 #include <QDialog>
 #include "ui_LoginWidget.h"
@@ -13,7 +14,12 @@ public:
 	LoginWidget(QWidget *parent = Q_NULLPTR);
 	~LoginWidget();
 
+public slots:
+
+
 private:
-	Ui::LoginWidget ui;
+	Ui::LoginWidget m_ui;
 	Baseframe* m_baseframe;
 };
+
+#endif

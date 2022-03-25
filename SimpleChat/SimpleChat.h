@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SIMPLECHAT_H
+#define SIMPLECHAT_H
 
 #include <QtWidgets/QMainWindow>
 #include "ui_SimpleChat.h"
@@ -20,3 +21,4 @@ private:
     LoginWidget* m_pLoginWidget;
     QFileSystemWatcher* m_fileWatcher;
 };
+#endif // !SIMPLECHAT_H
