@@ -70,5 +70,8 @@
     <ClInclude Include="DataBaseManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pubStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

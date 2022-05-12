@@ -32,13 +32,13 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>6.1.3_msvc2019_64</QtInstall>
+    <QtInstall>6.2.4_msvc2019_64</QtInstall>
     <QtModules>core;sql;network;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>6.1.3_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtInstall>6.2.4_msvc2019_64</QtInstall>
+    <QtModules>core;sql;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataBaseManager.h" />
+    <ClInclude Include="pubStruct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

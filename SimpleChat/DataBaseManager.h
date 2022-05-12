@@ -1,38 +1,32 @@
-#ifndef DATABASEMANAGER_H
+﻿#ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 #include <QString> 
 #include <QSqlDatabase>
 #include <QSqlQuery>
+
+#include "pubStruct.h"
+
+
 
 class DataBaseManager
 {
 public:
 	DataBaseManager();
 	~DataBaseManager();
-	void Init(const QString& sHost, const int& iPort, const QString& sDBName,
-		const QString& sUserName, const QString& sPassword);
-	
+
 	bool openDB();
 
-	inline bool IsOpen(){return m_dataBase.isOpen();}
+	inline bool IsOpen() { return m_dataBase.isOpen(); }
 
-	inline void Close()
-	{
-		if (m_dataBase.isOpen())
-		{
-			m_dataBase.close();
-		}
-	}
+	void Close() { if (m_dataBase.isOpen())m_dataBase.close(); }
 
-	bool Exec(const QString& sSql)
-	{
-		if (!openDB())
-		{
-			return false;
-		}
-		QSqlQuery query = m_dataBase.exec(sSql);
-		return query.isValid();
-	}
+	// 用户相关操作
+	int QueryUser(QString UserCode, QString Password);
+	bool AddUser(const ST_UserInfo& stUserInfo);
+	bool UpdateUser(const ST_UserInfo& stUserInfo, bool bUpdatePassword = false);
+	bool DelUser(const QString& sUserCode);
+
+
 
 private:
 

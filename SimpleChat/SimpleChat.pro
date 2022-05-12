@@ -5,7 +5,7 @@
 TEMPLATE = app
 TARGET = SimpleChat
 DESTDIR = ./x64/Debug
-CONFIG += debug
+CONFIG += debug C++17
 LIBS += -L"."
 DEPENDPATH += .
 MOC_DIR += .
@@ -15,3 +15,10 @@ RCC_DIR += .
 include(SimpleChat.pri)
 win32-msvc*:QMAKE_CXXFLAGS += /wd"4819" /utf-8
 
+win64-msvc*: {
+    QMAKE_CFLAGS *= /utf-8
+    QMAKE_CXXFLAGS *= /utf-8
+}
+windows {
+     DEFINES *= Q_COMPILER_INITIALIZER_LISTS
+}
