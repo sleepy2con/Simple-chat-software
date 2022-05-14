@@ -1,9 +1,7 @@
 ﻿#include "LoginWidget.h"
-#include "Baseframe.h"
+
 #include <QMessageBox>
-
-
-
+#include "pubStruct.h"
 
 LoginWidget::LoginWidget(QWidget* parent)
 	: QDialog(parent)
@@ -15,8 +13,7 @@ LoginWidget::LoginWidget(QWidget* parent)
 	m_baseframe->setWindowType(1);
 
 	m_ui.stackedWidget->setCurrentIndex(0);
-	QString temp = "采集";
-	qDebug() << temp;
+
 
 
 }
@@ -24,6 +21,7 @@ LoginWidget::LoginWidget(QWidget* parent)
 LoginWidget::~LoginWidget()
 {
 }
+
 void LoginWidget::on_btn_login_clicked()
 {
 	if (m_ui.le_username->text().isEmpty() || m_ui.le_password->text().isEmpty())

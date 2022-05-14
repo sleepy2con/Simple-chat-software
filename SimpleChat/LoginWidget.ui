@@ -38,7 +38,7 @@
          <item>
           <widget class="QLabel" name="label_7">
            <property name="text">
-            <string>图标</string>
+            <string>普通聊天软件</string>
            </property>
           </widget>
          </item>
@@ -99,16 +99,22 @@
          <item>
           <widget class="QCheckBox" name="checkBox">
            <property name="text">
-            <string>CheckBox</string>
+            <string>记住密码</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>记住密码</string>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
-          </widget>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -117,14 +123,27 @@
          <item>
           <widget class="QCheckBox" name="checkBox_2">
            <property name="text">
-            <string>CheckBox</string>
+            <string>自动登录</string>
            </property>
           </widget>
          </item>
          <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="QPushButton" name="btn_gotoReg">
            <property name="text">
-            <string>没有账户？注册</string>
+            <string>注册账户</string>
            </property>
           </widget>
          </item>

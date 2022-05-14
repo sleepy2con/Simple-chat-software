@@ -4,7 +4,7 @@
 #include <QDialog>
 #include "ui_LoginWidget.h"
 #include "DataBaseManager.h"
-class Baseframe;
+#include "Baseframe.h"
 
 class LoginWidget : public QDialog
 {
@@ -14,6 +14,9 @@ public:
 	LoginWidget(QWidget* parent = Q_NULLPTR);
 	~LoginWidget();
 	void setDBPtr(DataBaseManager* ptr) { tempDBPtr = ptr;}
+
+
+
 public slots:
 
 	void on_btn_login_clicked();
@@ -23,10 +26,15 @@ public slots:
 
 signals:
 	void loginResponse(int iStateNum);
+
 private:
 	Ui::LoginWidget m_ui;
 	Baseframe* m_baseframe;
 	DataBaseManager* tempDBPtr;
+
+public:
+	void hide() { m_baseframe->hide(); }
+	void show() { m_baseframe->show(); }
 
 };
 

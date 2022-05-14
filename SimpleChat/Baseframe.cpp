@@ -1,7 +1,11 @@
 #include "Baseframe.h"
 
+#include <windows.h>        //注意头文件
+#include <windowsx.h>
+
+
 Baseframe::Baseframe(QWidget *parent)
-	: QWidget(parent)
+	: QWidget(parent), m_iWinType(0)
 {
 	m_ui.setupUi(this);
 	this->setWindowFlags(Qt::FramelessWindowHint);
@@ -12,7 +16,15 @@ Baseframe::~Baseframe()
 }
 void Baseframe::on_btn_close_clicked()
 {
-	this->close();
+    emit(closeAppSignals());
+    this->close();
+}
+void Baseframe::on_btn_min_clicked()
+{
+    this->setWindowState(Qt::WindowMinimized);
+}
+void Baseframe::on_btn_zoom_clicked()
+{
 }
 void Baseframe::addWidget2Content(QWidget* ptr)
 {
@@ -21,6 +33,7 @@ void Baseframe::addWidget2Content(QWidget* ptr)
 
 void Baseframe::setWindowType(int wType)
 {
+    m_iWinType = wType;
     switch (wType)
     {
     case defaultType:

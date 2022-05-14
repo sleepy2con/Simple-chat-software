@@ -5,5 +5,9 @@
         <file>pics/min.png</file>
         <file>pics/zoom.png</file>
         <file>qss/style.qss</file>
+        <file>pics/close_press.png</file>
+        <file>pics/max_press.png</file>
+        <file>pics/min_press.png</file>
+        <file>pics/zoom_press.png</file>
     </qresource>
 </RCC>

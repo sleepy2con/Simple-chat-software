@@ -1,32 +1,55 @@
-﻿#include "SimpleChat.h"
-#include "LoginWidget.h"
-#include <QFileSystemWatcher>
+﻿#include <QFileSystemWatcher>
 #include <QFile>
 #include <QDebug> 
 #include <QMessageBox>
+#include <QScreen> 
+
+#include "pubStruct.h"
+
+#include "AddDialog.h"
+#include "baseframe.h"
+#include "SimpleChat.h"
+#include "LoginWidget.h"
+#include "userWidget.h"
+
+int SimpleChat::iCurUserId = 0;
 
 SimpleChat::SimpleChat(QWidget* parent)
 	: QMainWindow(parent)
 	, m_pLoginWidget(new LoginWidget(0))
-	, m_fileWatcher(new QFileSystemWatcher())
 	, m_dbManager(new DataBaseManager())
+	, m_baseframe(new Baseframe(parent))
 {
-	qDebug() << QSqlDatabase::drivers();
+	m_baseframe->addWidget2Content(this);
+	m_baseframe->setWindowType(1);
 	m_ui.setupUi(this);
-	this->hide();
+	//this->hide();
+	m_baseframe->hide();
 	// 初始化数据库
 	m_dbManager->openDB();
-
+	
 	m_pLoginWidget->show();
 	m_pLoginWidget->setDBPtr(m_dbManager);
 
 
-
-
-
-
-
 	initConnect();
+
+
+	QRect screenRect = QGuiApplication::primaryScreen()->geometry();
+	//获取设备像素比
+	double devicePixelRatio = QGuiApplication::primaryScreen()->devicePixelRatio();
+	int screenW = screenRect.width();
+	int screenH = screenRect.height();
+	m_baseframe->setFixedSize(screenW *0.8, screenH *0.8);
+
+
+
+}
+
+SimpleChat::~SimpleChat()
+{
+	//extern int iCurUserId;
+	//iCurUserId = 0;
 }
 
 void SimpleChat::autoLoadQssFile(const QString& strQssPath)
@@ -41,13 +64,27 @@ void SimpleChat::autoLoadQssFile(const QString& strQssPath)
 	qssFile->close();
 }
 
+void SimpleChat::on_btn_add_clicked()
+{
+	AddDialog* tempDialog = new AddDialog(0);
+	tempDialog->setDBPtr(m_dbManager);
+	tempDialog->show();
+	connect(tempDialog, &AddDialog::AddFriResponse, [=](int iStateNum) {
+		ResponseByDifferentStateNum(iStateNum);
+		initFriendList();
+		});
+
+}
+
 void SimpleChat::initConnect()
 {
 	// 监视Qss文件当发生变动时自动重新加载QSS
-	QString strQssPath = "://qss/style.qss";
+
+	m_fileWatcher = new QFileSystemWatcher();
+	QString strQssPath = QApplication::applicationDirPath() + "/qss/style.qss";;
 	m_fileWatcher->addPath(strQssPath);
 	autoLoadQssFile(strQssPath);
-	connect(m_fileWatcher, &QFileSystemWatcher::fileChanged, this,
+	connect(m_fileWatcher, &QFileSystemWatcher::fileChanged,
 		[=]() {
 			autoLoadQssFile(strQssPath);
 		});
@@ -56,16 +93,46 @@ void SimpleChat::initConnect()
 		ResponseByDifferentStateNum(iStateNum);
 		});
 
+	// 留着做一些事情、
+	connect(m_baseframe, &Baseframe::closeAppSignals, [=]() {
+
+		});
+}
+
+void SimpleChat::initFriendList()
+{
+	if (templayout)
+	{
+		delete templayout;
+	}
+
+	templayout = new QVBoxLayout(m_ui.tab_1);
+	QList<ST_friendInfo> tempData;
+	int iStateNum = m_dbManager->getFriendsList(SimpleChat::iCurUserId, tempData);
+	if (iStateNum == Success)
+	{
+		for (int i = 0; i < tempData.size(); i++)
+		{
+			userWidget* tempWidget = new userWidget;
+			templayout->addWidget(tempWidget);
+			tempWidget->setData(tempData[i]);
+		}
+	}
+	QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+	templayout->addItem(verticalSpacer);
+
 }
 
 void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 {
 	switch (iStateNum)
 	{
-	case LoginSuccess:
+	case LoginSuccess:		// 登录成功
 	{
 		m_pLoginWidget->hide();
-		this->show();
+		m_baseframe->show();
+		initFriendList();
+
 		break;
 	}
 	case DBIsNotOpen:
@@ -94,6 +161,22 @@ void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 		break;
 	}
 
+	// 添加好友状态返回码判断
+	case CannotFindThidUser:
+	{
+		QMessageBox::warning(0, tr("提示"), tr("该账号未注册"));
+		break;
+	}
+	case AlreadyHaveThisRelation:
+	{
+		QMessageBox::warning(0, tr("添加失败"), tr("已经有该好友了"));
+		break;
+	}
+	case AddFriSuccess:
+	{
+		QMessageBox::information(0, tr("成功"), tr("添加好友成功"));
+		break;
+	}
 	default:
 		break;
 	}

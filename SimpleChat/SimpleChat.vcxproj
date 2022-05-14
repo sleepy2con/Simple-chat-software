@@ -92,16 +92,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="userWidget.cpp" />
     <QtRcc Include="SimpleChat.qrc" />
+    <QtUic Include="AddDialog.ui" />
     <QtUic Include="Baseframe.ui" />
     <QtUic Include="LoginWidget.ui" />
     <QtUic Include="SimpleChat.ui" />
     <QtMoc Include="SimpleChat.h" />
+    <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="Baseframe.cpp" />
     <ClCompile Include="DataBaseManager.cpp" />
+    <ClCompile Include="pubStruct.cpp" />
     <ClCompile Include="LoginWidget.cpp" />
     <ClCompile Include="SimpleChat.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="userWidget.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Baseframe.h" />
@@ -110,6 +115,8 @@
     <QtMoc Include="LoginWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="userWidget.h" />
+    <QtMoc Include="AddDialog.h" />
     <ClInclude Include="DataBaseManager.h" />
     <ClInclude Include="pubStruct.h" />
   </ItemGroup>

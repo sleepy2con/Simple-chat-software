@@ -3,16 +3,16 @@
 #include <QString> 
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QList>
 
 #include "pubStruct.h"
-
 
 
 class DataBaseManager
 {
 public:
 	DataBaseManager();
-	~DataBaseManager();
+	~DataBaseManager(); 
 
 	bool openDB();
 
@@ -20,13 +20,22 @@ public:
 
 	void Close() { if (m_dataBase.isOpen())m_dataBase.close(); }
 
+	bool Exec(const QString& sSql);
+
 	// 用户相关操作
-	int QueryUser(QString UserCode, QString Password);
-	bool AddUser(const ST_UserInfo& stUserInfo);
+	int QueryUser(const QString& UserCode, const QString& Password);		// 用于登录验证
+	int AddUser(const ST_UserInfo& stUserInfo);
+	// 
 	bool UpdateUser(const ST_UserInfo& stUserInfo, bool bUpdatePassword = false);
 	bool DelUser(const QString& sUserCode);
 
+	// 查找添加好友
+	int AddFri(const QString& myid,const QString& userid);
 
+	// 获取好友列表
+	int getFriendsList(int id,QList<ST_friendInfo>& friInfoList);
+
+	int changeOnlineStatus(int id, bool b = true);
 
 private:
 

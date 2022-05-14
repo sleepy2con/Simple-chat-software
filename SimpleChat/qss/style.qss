@@ -1,9 +1,14 @@
 QWidget
 {
-	
+
 }
 
 QStackedWidget
 {
-	background-color:grey;
+	background-color:blue;
+}
+
+#btn_close
+{
+	border-image:url(//pics/close.png);
 }

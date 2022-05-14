@@ -49,6 +49,15 @@
     <ClCompile Include="DataBaseManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AddDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pubStruct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="userWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Baseframe.h">
@@ -57,12 +66,24 @@
     <QtMoc Include="LoginWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="AddDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="userWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Baseframe.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="LoginWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="AddDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="userWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
