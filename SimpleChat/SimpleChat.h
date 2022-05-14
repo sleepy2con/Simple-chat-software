@@ -37,7 +37,5 @@ private:
 	DataBaseManager* m_dbManager;
 	Baseframe* m_baseframe;
 
-	// QTabWidget下的Layout
-	QVBoxLayout* templayout;
 };
 #endif // !SIMPLECHAT_H

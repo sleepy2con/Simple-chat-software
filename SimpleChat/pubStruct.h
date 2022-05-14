@@ -1,16 +1,25 @@
 #ifndef PUBSTRUCT_H
 #define PUBSTRUCT_H
-
+#include <QLayout>
 #include <QString>
 #include <QDateTime> 
 //DataBaseManager* dbManager;			// 
+void clearWidgets(QLayout* layout);
 
-struct ST_UserInfo
+struct ST_LoginInfo
 {
 	QString sUserName;							// –’√˚
 	QString sPassword;							// √‹¬Î
 };
 
+struct ST_UserInfo
+{
+	int id;
+	QString sUserName;							// –’√˚
+	QString sPassword;							// √‹¬Î
+	QDateTime createTime;
+	bool bifOnLine;
+};
 
 struct ST_friendInfo
 {
@@ -40,7 +49,12 @@ enum
 	AddFriSuccess,
 };
 
-
+// 
+class CurUserData
+{
+public:
+	static ST_UserInfo curUserInfo;
+};
 
 #endif
 

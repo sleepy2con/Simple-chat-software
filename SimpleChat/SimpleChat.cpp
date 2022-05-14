@@ -97,29 +97,42 @@ void SimpleChat::initConnect()
 	connect(m_baseframe, &Baseframe::closeAppSignals, [=]() {
 
 		});
+
 }
 
-void SimpleChat::initFriendList()
+void SimpleChat::initFriendList() 
 {
-	if (templayout)
+	// clear;
+	if (m_ui.friListLayout)
 	{
-		delete templayout;
+		//clearWidgets(templayout);
+		int iTemp = m_ui.friListLayout->count();
+		while (m_ui.friListLayout->count())
+		{
+			iTemp = m_ui.friListLayout->count();
+			QWidget* p = m_ui.friListLayout->itemAt(0)->widget();
+			p->setParent(NULL);
+			m_ui.friListLayout->removeWidget(p);
+			delete p; // 清除内存
+		}
 	}
 
-	templayout = new QVBoxLayout(m_ui.tab_1);
 	QList<ST_friendInfo> tempData;
 	int iStateNum = m_dbManager->getFriendsList(SimpleChat::iCurUserId, tempData);
 	if (iStateNum == Success)
 	{
 		for (int i = 0; i < tempData.size(); i++)
 		{
-			userWidget* tempWidget = new userWidget;
-			templayout->addWidget(tempWidget);
+			userWidget* tempWidget = new userWidget(0);
+			connect(tempWidget, &userWidget::clicked, [=]() {
+				
+				});
+			m_ui.friListLayout->addWidget(tempWidget);
 			tempWidget->setData(tempData[i]);
 		}
 	}
-	QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-	templayout->addItem(verticalSpacer);
+	//QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+	//m_ui.friListLayout->addItem(verticalSpacer);
 
 }
 
@@ -132,7 +145,8 @@ void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 		m_pLoginWidget->hide();
 		m_baseframe->show();
 		initFriendList();
-
+		m_dbManager->getUserInfo(SimpleChat::iCurUserId, CurUserData::curUserInfo);
+		m_ui.btn_headPic->setText(CurUserData::curUserInfo.sUserName);
 		break;
 	}
 	case DBIsNotOpen:

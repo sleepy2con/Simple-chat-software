@@ -46,7 +46,7 @@ void LoginWidget::on_btn_reg_clicked()
 		QMessageBox::warning(0, "错误", tr("两次密码不一致"));
 		return;
 	}
-	ST_UserInfo tempData = { m_ui.le_username_2->text(), m_ui.le_password_1->text()};
+	ST_LoginInfo tempData = { m_ui.le_username_2->text(), m_ui.le_password_1->text()};
 
 	int iStateNum = tempDBPtr->AddUser(tempData);
 	emit loginResponse(iStateNum);

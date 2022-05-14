@@ -78,11 +78,11 @@ int DataBaseManager::QueryUser(const QString& UserCode, const QString& Password)
 	}
 	m_dataBase.close();
 	SimpleChat::iCurUserId = id;
-
+	changeOnlineStatus(SimpleChat::iCurUserId);
 	return LoginSuccess;
 }
 
-int DataBaseManager::AddUser(const ST_UserInfo& stUserInfo)
+int DataBaseManager::AddUser(const ST_LoginInfo& stUserInfo)
 {
 	if (!openDB())
 	{
@@ -127,7 +127,7 @@ int DataBaseManager::AddUser(const ST_UserInfo& stUserInfo)
 	return AddUserSuccess;
 }
 
-bool DataBaseManager::UpdateUser(const ST_UserInfo& stUserInfo, bool bUpdatePassword)
+bool DataBaseManager::UpdateUser(const ST_LoginInfo& stUserInfo, bool bUpdatePassword)
 {
 	return 0;
 }
@@ -227,6 +227,41 @@ int DataBaseManager::changeOnlineStatus(int id, bool b)
 		qDebug() << "sqlquery.exe执行失败";
 		m_dataBase.close();
 		return QueryExecFailed;
+		return QueryExecFailed;
+	}
+	return Success;
+}
+
+int DataBaseManager::getUserInfo(int id,ST_UserInfo& stTempData)
+{
+
+	if (!openDB())
+	{
+		qDebug() << "数据库未打开";
+		return DBIsNotOpen;
+	}
+
+	QSqlQuery query(m_dataBase);
+
+	// 判断数据库中是否已存在记录
+	QString sSql = "select * from user where id=?";
+
+	query.prepare(sSql);
+	query.bindValue(0, id);
+	if (!query.exec())
+	{
+		qDebug() << "sqlquery.exe执行失败";
+		m_dataBase.close();
+		return QueryExecFailed;
+	}
+
+	while (query.next())
+	{
+		stTempData.id = query.value(0).toInt();
+		stTempData.sUserName = query.value(1).toString();
+		stTempData.sPassword = query.value(2).toString();
+		stTempData.createTime = QDateTime::fromString(query.value(3).toString(), "yyyy-MM-dd hh:mm:ss");
+		stTempData.bifOnLine = query.value(1).toInt();
 	}
 	return Success;
 }

@@ -11,6 +11,12 @@ public:
 	userWidget(QWidget *parent = Q_NULLPTR);
 	~userWidget();
 	void setData(const ST_friendInfo& tempData);
+	ST_friendInfo getData() { return m_thisGuyInfo; }
+protected:
+	virtual void mouseReleaseEvent(QMouseEvent* ev);
+signals:
+	void clicked();
 private:
 	Ui::userWidget ui;
+	ST_friendInfo m_thisGuyInfo;
 };

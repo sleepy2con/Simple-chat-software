@@ -24,9 +24,9 @@ public:
 
 	// 用户相关操作
 	int QueryUser(const QString& UserCode, const QString& Password);		// 用于登录验证
-	int AddUser(const ST_UserInfo& stUserInfo);
+	int AddUser(const ST_LoginInfo& stUserInfo);
 	// 
-	bool UpdateUser(const ST_UserInfo& stUserInfo, bool bUpdatePassword = false);
+	bool UpdateUser(const ST_LoginInfo& stUserInfo, bool bUpdatePassword = false);
 	bool DelUser(const QString& sUserCode);
 
 	// 查找添加好友
@@ -36,6 +36,8 @@ public:
 	int getFriendsList(int id,QList<ST_friendInfo>& friInfoList);
 
 	int changeOnlineStatus(int id, bool b = true);
+
+	int getUserInfo(int id, ST_UserInfo& userInfo);
 
 private:
 
