@@ -16,8 +16,14 @@ Baseframe::~Baseframe()
 }
 void Baseframe::on_btn_close_clicked()
 {
-    emit(closeAppSignals());
-    this->close();
+    if (m_iWinType == MainWindow)
+    {
+        emit(closeAppSignals());
+    }
+    else
+    {
+        this->close();
+    }
 }
 void Baseframe::on_btn_min_clicked()
 {
@@ -39,6 +45,7 @@ void Baseframe::setWindowType(int wType)
     case defaultType:
         break;
     case hideBtnZoom:
+    case MainWindow:
         m_ui.btn_zoom->hide();
         break;
     default:

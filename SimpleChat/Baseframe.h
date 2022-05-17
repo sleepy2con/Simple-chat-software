@@ -8,7 +8,9 @@ enum
 {
 	defaultType = 0,
 	hideBtnZoom,
-	DialogType
+	DialogType,
+	MainWindow
+
 };
 
 

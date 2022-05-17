@@ -25,6 +25,8 @@ public:
 	// 用户相关操作
 	int QueryUser(const QString& UserCode, const QString& Password);		// 用于登录验证
 	int AddUser(const ST_LoginInfo& stUserInfo);
+	int UpdateUserIp(int id,const QString& ip);
+
 	// 
 	bool UpdateUser(const ST_LoginInfo& stUserInfo, bool bUpdatePassword = false);
 	bool DelUser(const QString& sUserCode);

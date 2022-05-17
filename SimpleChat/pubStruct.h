@@ -3,8 +3,11 @@
 #include <QLayout>
 #include <QString>
 #include <QDateTime> 
+#include <QNetworkInterface>
 //DataBaseManager* dbManager;			// 
 void clearWidgets(QLayout* layout);
+QString getLocalIp();
+
 
 struct ST_LoginInfo
 {
@@ -19,6 +22,7 @@ struct ST_UserInfo
 	QString sPassword;							// 密码
 	QDateTime createTime;
 	bool bifOnLine;
+	QString slocalIp;
 };
 
 struct ST_friendInfo
@@ -26,6 +30,13 @@ struct ST_friendInfo
 	int id;	// 账号
 	QString sUserName;							// 姓名
 	QDateTime addTime;		// 添加好友时间。
+	bool bifOnLine;
+	QString sIp;
+};
+
+struct ST_udpContentHeader
+{
+	int id;
 };
 
 // sql对应的状态码
@@ -48,12 +59,14 @@ enum
 	AlreadyHaveThisRelation,
 	AddFriSuccess,
 };
-
+enum ChatMsgType { ChatMsg, OnLine, OffLine, SfileName, RefFile };//消息类型
 // 
 class CurUserData
 {
 public:
+	static int iPubPort4Udp;
 	static ST_UserInfo curUserInfo;
+	static ST_friendInfo curChosenUser;
 };
 
 #endif

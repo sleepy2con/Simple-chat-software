@@ -2,7 +2,7 @@
 #include <QDateTime> 
 #include "DataBaseManager.h"
 #include "SimpleChat.h"
-
+#include <QMessageBox>
 DataBaseManager::DataBaseManager()
 {
 	//qDebug() << QSqlDatabase::drivers();	
@@ -36,6 +36,7 @@ bool DataBaseManager::openDB()
 
 	if (!m_dataBase.open())
 	{
+		QMessageBox::warning(0, "opendb faile", m_dataBase.lastError().text());
 		qDebug() << "opendb failed";
 		qDebug() << m_dataBase.lastError().text();
 		return false;
@@ -79,7 +80,34 @@ int DataBaseManager::QueryUser(const QString& UserCode, const QString& Password)
 	m_dataBase.close();
 	SimpleChat::iCurUserId = id;
 	changeOnlineStatus(SimpleChat::iCurUserId);
+	UpdateUserIp(id,getLocalIp());
 	return LoginSuccess;
+}
+
+int DataBaseManager::UpdateUserIp(int id,const QString& ip)
+{
+	if (!openDB())
+	{
+		qDebug() << "数据库未打开";
+		return DBIsNotOpen;
+	}
+
+	QSqlQuery query(m_dataBase);
+
+	// 判断数据库中是否已存在记录
+	QString sSql = "update user set ipAddress=? where id=?";
+
+	query.prepare(sSql);
+	query.bindValue(0, ip);
+	query.bindValue(1, id);
+	if (!query.exec())
+	{
+		qDebug() << "sqlquery.exe执行失败";
+		m_dataBase.close();
+		return QueryExecFailed;
+		return QueryExecFailed;
+	}
+	return Success;
 }
 
 int DataBaseManager::AddUser(const ST_LoginInfo& stUserInfo)
@@ -112,12 +140,12 @@ int DataBaseManager::AddUser(const ST_LoginInfo& stUserInfo)
 		return WannaAddUserButThereHasBeen;
 	}
 
-	sSql = "insert into user(username,password,createtime) VALUES(:UserName,:Password,:CreateTime)";
+	sSql = "insert into user(username,password,createtime,ipAddress) VALUES(:UserName,:Password,:CreateTime,:ipAddress)";
 	query.prepare(sSql);
 	query.bindValue(":UserName", stUserInfo.sUserName);
 	query.bindValue(":Password", stUserInfo.sPassword);
 	query.bindValue(":CreateTime",QDateTime::currentDateTime());
-
+	query.bindValue(":ipAddress",getLocalIp());
 	if (!query.exec())
 	{
 		m_dataBase.close();
@@ -261,7 +289,8 @@ int DataBaseManager::getUserInfo(int id,ST_UserInfo& stTempData)
 		stTempData.sUserName = query.value(1).toString();
 		stTempData.sPassword = query.value(2).toString();
 		stTempData.createTime = QDateTime::fromString(query.value(3).toString(), "yyyy-MM-dd hh:mm:ss");
-		stTempData.bifOnLine = query.value(1).toInt();
+		stTempData.bifOnLine = query.value(4).toInt();
+		stTempData.slocalIp = query.value(5).toString();
 	}
 	return Success;
 }
@@ -288,11 +317,11 @@ int DataBaseManager::getFriendsList(int id, QList<ST_friendInfo>& friInfoList)
 	QSqlQuery query(m_dataBase);
 
 	// 判断数据库中是否已存在记录
-	QString sSql = "select user.id,user.username,friend_relation.addFriTime from user \
+	QString sSql = "select user.id,user.username,friend_relation.addFriTime,user.ifOnline,user.ipAddress from user \
 		inner join friend_relation\
 		on user.id = friend_relation.userid where friend_id=?\
 		UNION\
-		select user.id, user.username, friend_relation.addFriTime from user\
+		select user.id, user.username, friend_relation.addFriTime,user.ifOnline,user.ipAddress from user\
 		inner join friend_relation\
 		on user.id = friend_relation.friend_id where userid = ?";
 
@@ -311,6 +340,8 @@ int DataBaseManager::getFriendsList(int id, QList<ST_friendInfo>& friInfoList)
 		stTempData.id = query.value(0).toInt();
 		stTempData.sUserName = query.value(1).toString();
 		stTempData.addTime = QDateTime::fromString(query.value(2).toString(), "yyyy-MM-dd hh:mm:ss");
+		stTempData.bifOnLine = query.value(3).toInt();
+		stTempData.sIp = query.value(4).toString();
 		friInfoList.append(stTempData);
 	}
 	return Success;

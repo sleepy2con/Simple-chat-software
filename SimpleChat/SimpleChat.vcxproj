@@ -33,12 +33,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.2.4_msvc2019_64</QtInstall>
-    <QtModules>core;sql;network;gui;widgets</QtModules>
+    <QtModules>core;sql;network;network;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.2.4_msvc2019_64</QtInstall>
-    <QtModules>core;sql;gui;widgets</QtModules>
+    <QtModules>core;sql;network;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -63,6 +63,11 @@
     <ClCompile>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -115,10 +120,18 @@
     <QtMoc Include="LoginWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <QtMoc Include="userWidget.h" />
     <QtMoc Include="AddDialog.h" />
     <ClInclude Include="DataBaseManager.h" />
     <ClInclude Include="pubStruct.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SimpleChat.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
