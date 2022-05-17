@@ -64,6 +64,7 @@ enum
 
 	// 群
 	CreateGroupSuccess,
+	insertGroupRelationSuccess,
 };
 enum ChatMsgType { ChatMsg, OnLine, OffLine, SfileName, RefFile };//消息类型
 
@@ -87,6 +88,14 @@ struct stChatGroup
 	//stChatGroup& operator=(const stChatGroup& data);
 };
 
+struct stGroupRelation
+{
+	int id;
+	int igroupId;
+	int memberId;
+	QDateTime addTime;
+	QDateTime exitTime;
+};
 
 // 
 class CurUserData

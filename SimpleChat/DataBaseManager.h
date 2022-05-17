@@ -44,6 +44,12 @@ public:
 	// 群聊相关操作
 	int CreateChatGroup(const stChatGroup& chatName);
 
+	int insertChatGroupRelation(const stGroupRelation& stData);
+
+	int GetAllMyChatGroupInfo(int id);
+
+
+
 private:
 
 	QSqlDatabase m_dataBase;

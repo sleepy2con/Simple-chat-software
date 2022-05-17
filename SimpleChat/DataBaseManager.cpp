@@ -260,6 +260,36 @@ int DataBaseManager::changeOnlineStatus(int id, bool b)
 	return Success;
 }
 
+int DataBaseManager::GetAllMyChatGroupInfo(int id)
+{
+	return 0;
+}
+
+int DataBaseManager::insertChatGroupRelation(const stGroupRelation& stData)
+{
+	if (!openDB())
+	{
+		qDebug() << "数据库未打开";
+		return DBIsNotOpen;
+	}
+
+	QSqlQuery query(m_dataBase);
+	QString sSql = "insert into chatgroup_relation(group_id,user_id,addTime) VALUES(?,?,?)";
+
+	query.prepare(sSql);
+	query.bindValue(0, stData.igroupId);
+	query.bindValue(1, stData.memberId);
+	query.bindValue(1, stData.memberId);
+
+	if (!query.exec())
+	{
+		m_dataBase.close();
+		return QueryExecFailed;
+	}
+	m_dataBase.close();
+	return insertGroupRelationSuccess;
+}
+
 int DataBaseManager::CreateChatGroup(const stChatGroup& stdata)
 {
 	if (!openDB())
@@ -269,7 +299,7 @@ int DataBaseManager::CreateChatGroup(const stChatGroup& stdata)
 	}
 
 	QSqlQuery query(m_dataBase);
-	QString sSql = "insert into chatgroup(nickname,GroupOwnerID) VALUES(?,?)";
+	QString sSql = "insert into chatgroup(nickname,GroupOwnerID) VALUES(?,?)";		// 已创建触发器
 
 	query.prepare(sSql);
 	query.bindValue(0, stdata.sNickName);
@@ -280,6 +310,7 @@ int DataBaseManager::CreateChatGroup(const stChatGroup& stdata)
 		return QueryExecFailed;
 	}
 	m_dataBase.close();
+
 	return CreateGroupSuccess;
 }
 
