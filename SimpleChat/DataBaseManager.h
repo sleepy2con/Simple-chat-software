@@ -41,6 +41,9 @@ public:
 
 	int getUserInfo(int id, ST_UserInfo& userInfo);
 
+	// 群聊相关操作
+	int CreateChatGroup(const stChatGroup& chatName);
+
 private:
 
 	QSqlDatabase m_dataBase;

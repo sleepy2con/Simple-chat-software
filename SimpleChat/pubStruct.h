@@ -4,6 +4,9 @@
 #include <QString>
 #include <QDateTime> 
 #include <QNetworkInterface>
+#include <QList>
+#include <QPair>
+
 //DataBaseManager* dbManager;			// 
 void clearWidgets(QLayout* layout);
 QString getLocalIp();
@@ -58,6 +61,9 @@ enum
 	CannotFindThidUser,
 	AlreadyHaveThisRelation,
 	AddFriSuccess,
+
+	// 群
+	CreateGroupSuccess,
 };
 enum ChatMsgType { ChatMsg, OnLine, OffLine, SfileName, RefFile };//消息类型
 
@@ -70,6 +76,15 @@ struct stUdpContentHeader
 	quint32 msgType;
 	friend QDataStream& operator<<(QDataStream& out,const stUdpContentHeader&);
 	friend QDataStream& operator>>(QDataStream& in, stUdpContentHeader&);
+};
+
+struct stChatGroup
+{
+	int id;
+	int iOwnId;
+	QList<QPair<int, QString>> members;		// 用来存储群组成员
+	QString sNickName;
+	//stChatGroup& operator=(const stChatGroup& data);
 };
 
 

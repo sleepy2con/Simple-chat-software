@@ -260,6 +260,29 @@ int DataBaseManager::changeOnlineStatus(int id, bool b)
 	return Success;
 }
 
+int DataBaseManager::CreateChatGroup(const stChatGroup& stdata)
+{
+	if (!openDB())
+	{
+		qDebug() << "数据库未打开";
+		return DBIsNotOpen;
+	}
+
+	QSqlQuery query(m_dataBase);
+	QString sSql = "insert into chatgroup(nickname,GroupOwnerID) VALUES(?,?)";
+
+	query.prepare(sSql);
+	query.bindValue(0, stdata.sNickName);
+	query.bindValue(1, stdata.iOwnId);
+	if (!query.exec())
+	{
+		m_dataBase.close();
+		return QueryExecFailed;
+	}
+	m_dataBase.close();
+	return CreateGroupSuccess;
+}
+
 int DataBaseManager::getUserInfo(int id,ST_UserInfo& stTempData)
 {
 

@@ -122,9 +122,16 @@ void SimpleChat::on_btn_send_clicked()
 
 void SimpleChat::on_btn_createGroup_clicked()
 {
-	CreateChatGroup* tempDialog = new CreateChatGroup(0);
-	tempDialog->show();
+	CreateChatGroup* tempDialog = new CreateChatGroup(this);
+
+	stChatGroup tempData;
+	tempData.iOwnId = CurUserData::curUserInfo.id;
+	tempDialog->setData(tempData);
 	tempDialog->setDbPtr(m_dbManager);
+	tempDialog->show();
+	connect(tempDialog, &CreateChatGroup::giveResponse, [=](int iStateNum) {
+		ResponseByDifferentStateNum(iStateNum);
+		});
 	//connect(tempDialog)
 }
 
@@ -312,6 +319,10 @@ void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 		QMessageBox::information(0, tr("成功"), tr("添加好友成功"));
 		break;
 	}
+
+	case CreateGroupSuccess:
+		QMessageBox::information(0, tr("成功"), tr("创建群聊成功"));
+		break;
 	default:
 		break;
 	}
