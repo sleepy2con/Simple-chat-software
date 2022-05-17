@@ -6,7 +6,7 @@
 
 
 AddDialog::AddDialog(QWidget *parent)
-	: QDialog(parent), m_baseframe(new Baseframe(parent))
+	: QDialog(parent), m_baseframe(new Baseframe(parent)), m_addType(0)
 {
 	ui.setupUi(this);
 	m_baseframe->addWidget2Content(this);

@@ -25,6 +25,8 @@ public slots:
 	void on_btn_add_clicked();
 	// 发送消息
 	void on_btn_send_clicked();
+
+	void on_btn_createGroup_clicked();
 private:
 
 	void initConnect();

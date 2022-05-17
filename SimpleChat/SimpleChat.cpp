@@ -3,8 +3,9 @@
 #include <QDebug> 
 #include <QMessageBox>
 #include <QScreen> 
-
+#include <QTimer>
 #include <QNetworkInterface>
+
 #include "pubStruct.h"
 
 #include "AddDialog.h"
@@ -12,7 +13,9 @@
 #include "SimpleChat.h"
 #include "LoginWidget.h"
 #include "userWidget.h"
-#include <QTimer>
+#include "CreateChatGroup.h"
+
+
 int SimpleChat::iCurUserId = 0;
 
 SimpleChat::SimpleChat(QWidget* parent)
@@ -96,10 +99,13 @@ void SimpleChat::on_btn_send_clicked()
 	QDataStream write(&sendData, QIODevice::WriteOnly);
 	QString tempStr = m_ui.le_sendMsg->text();
 
-	
-	quint32 tempid = CurUserData::curUserInfo.id;	// 自己ID
-	quint32 tobeSendUserId = CurUserData::curChosenUser.id;	
-	write << tempid<< tobeSendUserId<<tempStr;		
+	stUdpContentHeader tempData = { CurUserData::curUserInfo.id ,CurUserData::curChosenUser.id,BetweenUsers};
+
+	//quint32 tempid = CurUserData::curUserInfo.id;	// 自己ID
+	//quint32 tobeSendUserId = CurUserData::curChosenUser.id;	
+	//write << tempid<< tobeSendUserId<<tempStr;	
+	// 
+	write << tempData<<tempStr;
 	//if(myUdpSocket->writeDatagram(sendData, sendData.length(), QHostAddress(sendip), quint16(sendport)) == -1)  //往 IP+prot上 发生数据)
 	if (myUdpSocket->writeDatagram(sendData, sendData.length(), QHostAddress::Broadcast, quint16(sendport)) == -1)
 	{
@@ -108,25 +114,18 @@ void SimpleChat::on_btn_send_clicked()
 	}
 	
 	QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"); //将时间转换成字符串格式（按格式）
-	m_ui.plainTextEdit->appendPlainText("[" + CurUserData::curUserInfo.sUserName + "]" + curTime + ":");
+	m_ui.plainTextEdit->appendHtml("<pre style='text-align:right'>[自己]" + curTime + "< / pre>");
 	m_ui.plainTextEdit->appendPlainText(m_ui.le_sendMsg->text()); //添加文本
 	m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);
 
+}
 
-	//QString     targetIP = CurUserData::curChosenUser.sIp;
-	//QHostAddress    targetAddr(targetIP);
-
-	//quint16     targetPort = quint16(CurUserData::iPubPort4Udp);//目标port
-
-	//QString  msg = m_ui.le_sendMsg->text();//发送的消息内容
-
-	//QByteArray  str = msg.toUtf8();
-	//myUdpSocket->writeDatagram(str, targetAddr, targetPort); //发出数据报
-
-	//m_ui.plainTextEdit->appendPlainText("[out] " + msg);
-	//m_ui.le_sendMsg->clear();
-	//m_ui.le_sendMsg->setFocus();
-
+void SimpleChat::on_btn_createGroup_clicked()
+{
+	CreateChatGroup* tempDialog = new CreateChatGroup(0);
+	tempDialog->show();
+	tempDialog->setDbPtr(m_dbManager);
+	//connect(tempDialog)
 }
 
 
@@ -142,19 +141,6 @@ void SimpleChat::initUdpSocket()
 	}
 	
 	connect(myUdpSocket, &QUdpSocket::readyRead, [=]() {
-		//while (myUdpSocket->hasPendingDatagrams())
-		//{
-		//	QByteArray recData;
-		//	recData.resize(myUdpSocket->pendingDatagramSize());
-		//	myUdpSocket->readDatagram(recData.data(), recData.size());
-		//	QDataStream read(&recData, QIODevice::ReadOnly);
-		//	QString recText;
-		//	read >> recText;
-		//	QString curTime = QDateTime::currentDateTime().toString("hh.mm.ss"); //将时间转换成字符串格式（按格式）
-		//	m_ui.plainTextEdit->appendPlainText("[" + CurUserData::curChosenUser.sUserName + "]" + curTime + ":");
-		//	m_ui.plainTextEdit->appendPlainText(recText); //添加文本
-		//	m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);      //滚轮自动移动到末端     
-		//}
 
 		while (myUdpSocket->hasPendingDatagrams())
 		{
@@ -167,18 +153,20 @@ void SimpleChat::initUdpSocket()
 
 			QDataStream read(&datagram, QIODeviceBase::ReadOnly);
 
-			quint32 recUserId,myId;
-			QString tempStr;
-			read >> recUserId>> myId>> tempStr;
+	/*		quint32 recUserId,myId;
 
+			read >> recUserId>> myId>> tempStr;*/
+			QString tempStr;
+			stUdpContentHeader tempData;
+			read >> tempData >> tempStr;
 			// 判断接受者是否是自己。
-			if (myId != CurUserData::curUserInfo.id)
+			if (tempData.receiverId != CurUserData::curUserInfo.id)
 			{
 				return;
 			}
-			if (recUserId != CurUserData::curChosenUser.id)
+			if (tempData.senderId != CurUserData::curChosenUser.id)
 			{
-				QMessageBox::warning(0, tr("消息提示"), tr("您有来自账号") + QString::number(recUserId) + tr("的消息，消息不会保存仅仅给您个提示"));
+				QMessageBox::warning(0, tr("消息提示"), tr("您有来自账号") + QString::number(tempData.senderId) + tr("的消息，消息不会保存仅仅给您个提示"));
 				return;
 			}
 
@@ -257,7 +245,7 @@ void SimpleChat::initFriendList()
 					+"状态:"+ (CurUserData::curChosenUser.bifOnLine?"在线":"离线"));
 
 				m_ui.btn_send->setEnabled(true);
-
+				m_ui.plainTextEdit->clear();
 				});
 			m_ui.friListLayout->addWidget(tempWidget);
 			tempWidget->setData(tempData[i]);

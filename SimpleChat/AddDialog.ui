@@ -39,12 +39,18 @@
          <property name="text">
           <string>加好友</string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="btn_addgroup">
          <property name="text">
           <string>加群</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

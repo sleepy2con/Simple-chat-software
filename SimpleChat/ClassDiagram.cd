@@ -7,17 +7,10 @@
       <FileName>DataBaseManager.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CurUserData">
-    <Position X="7.25" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AACAAABAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>pubStruct.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="SimpleChat">
     <Position X="9" Y="0.75" Width="4.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAIAgACAAAQAQAAAAAAQIAAIAgQAgAABAAQAAAAA=</HashCode>
+      <HashCode>AAAAAIAgACAAAQAQAAAAAAQIAAIAgQAgAABAAQAAAAQ=</HashCode>
       <FileName>SimpleChat.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -45,8 +38,15 @@
   <Class Name="AddDialog">
     <Position X="1" Y="0.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAIAAAAAEQAAAAAAABAIgAAAAAAABABAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAIAAAAgEQAAAAAAABAIgAAAAAAABABAAAAAAAA=</HashCode>
       <FileName>AddDialog.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CurUserData">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAABAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>pubStruct.h</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="ST_LoginInfo">

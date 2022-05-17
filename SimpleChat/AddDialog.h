@@ -26,10 +26,14 @@ private:
 
 	Baseframe* m_baseframe;
 	DataBaseManager* tempDBPtr;
+	bool m_addType;	// default = 0,add fri;add group = 1
+
 public:
 	void hide() { m_baseframe->hide(); }
 	void show() { m_baseframe->show(); }
 	void setDBPtr(DataBaseManager* ptr) { tempDBPtr = ptr; }
+
+
 };
 
 

@@ -97,10 +97,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CreateChatGroup.cpp" />
     <ClCompile Include="userWidget.cpp" />
     <QtRcc Include="SimpleChat.qrc" />
     <QtUic Include="AddDialog.ui" />
     <QtUic Include="Baseframe.ui" />
+    <QtUic Include="CreateChatGroup.ui" />
     <QtUic Include="LoginWidget.ui" />
     <QtUic Include="SimpleChat.ui" />
     <QtMoc Include="SimpleChat.h" />
@@ -120,6 +122,7 @@
     <QtMoc Include="LoginWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="CreateChatGroup.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="userWidget.h" />
     <QtMoc Include="AddDialog.h" />

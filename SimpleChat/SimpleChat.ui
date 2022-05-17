@@ -58,7 +58,11 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLineEdit" name="lineEdit"/>
+         <widget class="QPushButton" name="btn_createGroup">
+          <property name="text">
+           <string>创建群聊</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="btn_add">

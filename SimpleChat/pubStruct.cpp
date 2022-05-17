@@ -21,3 +21,6 @@ QString getLocalIp()
 ST_UserInfo CurUserData::curUserInfo = { 0,"","",QDateTime::currentDateTime(),false,""};
 ST_friendInfo CurUserData::curChosenUser = {};
 int CurUserData::iPubPort4Udp = 23333;
+
+QDataStream& operator<<(QDataStream& out, const stUdpContentHeader& st) { out << st.senderId << st.receiverId << st.msgType; return out; }
+QDataStream& operator>>(QDataStream& in, stUdpContentHeader& st) { in >> st.senderId >> st.receiverId >> st.msgType; return in; }

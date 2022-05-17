@@ -60,6 +60,19 @@ enum
 	AddFriSuccess,
 };
 enum ChatMsgType { ChatMsg, OnLine, OffLine, SfileName, RefFile };//消息类型
+
+enum MsgType{GroupType,BetweenUsers};
+
+struct stUdpContentHeader
+{
+	quint32 senderId;
+	quint32 receiverId;
+	quint32 msgType;
+	friend QDataStream& operator<<(QDataStream& out,const stUdpContentHeader&);
+	friend QDataStream& operator>>(QDataStream& in, stUdpContentHeader&);
+};
+
+
 // 
 class CurUserData
 {
@@ -67,6 +80,7 @@ public:
 	static int iPubPort4Udp;
 	static ST_UserInfo curUserInfo;
 	static ST_friendInfo curChosenUser;
+
 };
 
 #endif
