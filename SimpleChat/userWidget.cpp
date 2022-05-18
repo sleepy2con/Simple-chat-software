@@ -1,7 +1,7 @@
 #include "userWidget.h"
 
 userWidget::userWidget(QWidget *parent)
-	: QWidget(parent)
+	: QWidget(parent), whatIam(1)
 {
 	ui.setupUi(this);
 	setProperty("class", "userWidget");
@@ -24,8 +24,9 @@ void userWidget::setGroupData(const stChatGroup& tempData)
 	m_thisGroupInfo = tempData;
 	ui.lb_headPic->setText(tempData.sNickName[0]);
 	ui.lb_username->setText(tempData.sNickName + " (" + QString::number(tempData.id) + ")");
+	whatIam = 0;
 }
 
 void userWidget::mouseReleaseEvent(QMouseEvent* ev) {
-	emit clicked();
+	emit clicked(whatIam);
 }

@@ -88,35 +88,59 @@ void SimpleChat::on_btn_add_clicked()
 void SimpleChat::on_btn_send_clicked()
 {
 
-	QString sendip = CurUserData::curChosenUser.sIp;   //获取目标ip
 	quint16 sendport = quint16(CurUserData::iPubPort4Udp);  //获取目标端口
-	if (sendip.isEmpty())
+	// 首先判断是群聊还是好友聊天，虽然是单对单，但是选择了广播
+	if (CurUserData::chatType)
 	{
-		QMessageBox::warning(0, tr("警告"), tr("对方用户未上线过，无法查询到对方IP\n暂无法联系，请以后再联系。"));
-		return;
+		QString sendip = CurUserData::curChosenUser.sIp;   //获取目标ip
+		
+
+		if (sendip.isEmpty())
+		{
+			QMessageBox::warning(0, tr("警告"), tr("对方用户未上线过，无法查询到对方IP\n暂无法联系，请以后再联系。"));
+			return;
+		}
+
+		QByteArray sendData;
+		QDataStream write(&sendData, QIODevice::WriteOnly);
+		QString tempStr = m_ui.le_sendMsg->text();
+
+		stUdpContentHeader tempData = { CurUserData::curUserInfo.id ,CurUserData::curChosenUser.id,BetweenUsers };
+		write << tempData << tempStr;
+		//if(myUdpSocket->writeDatagram(sendData, sendData.length(), QHostAddress(sendip), quint16(sendport)) == -1)  //往 IP+prot上 发生数据)
+		if (myUdpSocket->writeDatagram(sendData, sendData.length(), QHostAddress::Broadcast, quint16(sendport)) == -1)
+		{
+			QMessageBox::warning(0, tr("错误"), tr("发送信息失败"));
+			return;
+		}
+
+		QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"); //将时间转换成字符串格式（按格式）
+		m_ui.plainTextEdit->appendHtml("<pre style='text-align:right;color:rgb(0,128,64);'>[自己]" + curTime + "< / pre>");
+		m_ui.plainTextEdit->appendPlainText(m_ui.le_sendMsg->text()); //添加文本
+		m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);
 	}
-	QByteArray sendData;
-	QDataStream write(&sendData, QIODevice::WriteOnly);
-	QString tempStr = m_ui.le_sendMsg->text();
-
-	stUdpContentHeader tempData = { CurUserData::curUserInfo.id ,CurUserData::curChosenUser.id,BetweenUsers};
-
-	//quint32 tempid = CurUserData::curUserInfo.id;	// 自己ID
-	//quint32 tobeSendUserId = CurUserData::curChosenUser.id;	
-	//write << tempid<< tobeSendUserId<<tempStr;	
-	// 
-	write << tempData<<tempStr;
-	//if(myUdpSocket->writeDatagram(sendData, sendData.length(), QHostAddress(sendip), quint16(sendport)) == -1)  //往 IP+prot上 发生数据)
-	if (myUdpSocket->writeDatagram(sendData, sendData.length(), QHostAddress::Broadcast, quint16(sendport)) == -1)
+	// 群聊聊天，仍然是选择广播；
+	else
 	{
-		QMessageBox::warning(0,tr("错误"),tr("发送信息失败"));
-		return;
+		QByteArray sendData;
+		QDataStream write(&sendData, QIODevice::WriteOnly);
+		QString tempStr = m_ui.le_sendMsg->text();
+
+		stUdpContentHeader tempData = { CurUserData::curUserInfo.id ,CurUserData::curChatGroup.id,GroupType };	// 发送者自己的ID，群聊的ID，发送类型；
+		write << tempData << tempStr;
+		//if(myUdpSocket->writeDatagram(sendData, sendData.length(), QHostAddress(sendip), quint16(sendport)) == -1)  //往 IP+prot上 发生数据)
+		if (myUdpSocket->writeDatagram(sendData, sendData.length(), QHostAddress::Broadcast, quint16(sendport)) == -1)
+		{
+			QMessageBox::warning(0, tr("错误"), tr("发送信息失败"));
+			return;
+		}
+
+		QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"); //将时间转换成字符串格式（按格式）
+		m_ui.plainTextEdit->appendHtml("<pre style='text-align:right;color:rgb(0,128,64);'>[自己]" + curTime + "< / pre>");
+		m_ui.plainTextEdit->appendPlainText(m_ui.le_sendMsg->text()); //添加文本
+		m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);
+
 	}
-	
-	QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"); //将时间转换成字符串格式（按格式）
-	m_ui.plainTextEdit->appendHtml("<pre style='text-align:right'>[自己]" + curTime + "< / pre>");
-	m_ui.plainTextEdit->appendPlainText(m_ui.le_sendMsg->text()); //添加文本
-	m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);
 
 }
 
@@ -159,28 +183,61 @@ void SimpleChat::initUdpSocket()
 			myUdpSocket->readDatagram(datagram.data(), datagram.size(), &peerAddr, &peerPort);
 
 			QDataStream read(&datagram, QIODeviceBase::ReadOnly);
-
-	/*		quint32 recUserId,myId;
-
-			read >> recUserId>> myId>> tempStr;*/
 			QString tempStr;
 			stUdpContentHeader tempData;
 			read >> tempData >> tempStr;
-			// 判断接受者是否是自己。
-			if (tempData.receiverId != CurUserData::curUserInfo.id)
+			// 如果是好友聊天的话。
+			if (tempData.msgType)
 			{
-				return;
-			}
-			if (tempData.senderId != CurUserData::curChosenUser.id)
-			{
-				QMessageBox::warning(0, tr("消息提示"), tr("您有来自账号") + QString::number(tempData.senderId) + tr("的消息，消息不会保存仅仅给您个提示"));
-				return;
-			}
+				// 判断接受者是否是自己。
+				if (tempData.receiverId != CurUserData::curUserInfo.id)
+				{
+					return;
+				}
+				if (tempData.senderId != CurUserData::curChosenUser.id)
+				{
+					QMessageBox::warning(0, tr("消息提示"), tr("您有来自账号") + QString::number(tempData.senderId) + tr("的消息，消息不会保存仅仅给您个提示"));
+					return;
+				}
 
-			QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"); //将时间转换成字符串格式（按格式）
-			m_ui.plainTextEdit->appendPlainText("[" + CurUserData::curChosenUser.sUserName + "]" + curTime + ":");
-			m_ui.plainTextEdit->appendPlainText(tempStr); //添加文本
-			m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);      //滚轮自动移动到末端    
+				QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"); //将时间转换成字符串格式（按格式）
+				m_ui.plainTextEdit->appendHtml("<pre style='text-align:right;color:rgb(0,0,252);'>[" + CurUserData::curChosenUser.sUserName + "]" + curTime + "< / pre>");
+				//m_ui.plainTextEdit->appendPlainText("[" + CurUserData::curChosenUser.sUserName + "]" + curTime + ":");
+				m_ui.plainTextEdit->appendPlainText(tempStr); //添加文本
+				m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);      //滚轮自动移动到末端    
+			}
+			else
+			{
+				bool yesItHas = 0;
+				// 判断接受信息的群聊是否是自己拥有群聊，
+				for (auto i = CurUserData::thoseGroupsWhatIAmIn.begin(); i != CurUserData::thoseGroupsWhatIAmIn.end(); i++)
+				{
+					if (tempData.receiverId == i->id)
+					{
+						yesItHas = true;
+						break;
+					}
+				}
+				if (!yesItHas){ return;}
+				// 判断接受信息的群聊当前是否是当前已经打开群聊
+				if (tempData.receiverId != CurUserData::curChatGroup.id)
+				{
+					//QMessageBox::warning(0, tr("消息提示"), tr("您有来自群聊") +					// 有其他群聊消息，但不做提示了。
+					//QString::number(CurUserData::curChatGroup.id) + tr("的消息，消息不会保存仅仅给您个提示"));	
+					return;
+				}
+				// 判断发送者是否是自己，如果是自己，不做任何操作
+				if (tempData.senderId == CurUserData::curUserInfo.id)
+				{
+					return;
+				}
+				// 如过自己所在群聊有消息并且自己已打开当前聊天窗口
+				QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"); //将时间转换成字符串格式（按格式）
+				m_ui.plainTextEdit->appendHtml("<pre style='text-align:right;color:rgb(0,0,252);'>[" + QString::number(tempData.senderId) + "]" + curTime + "< / pre>");
+				//m_ui.plainTextEdit->appendPlainText("[" + QString::number(tempData.senderId) + "]" + curTime + ":");
+				m_ui.plainTextEdit->appendPlainText(tempStr); //添加文本
+				m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);      //滚轮自动移动到末端    
+			}
 		}
 		});
 
@@ -243,14 +300,15 @@ void SimpleChat::initFriendList()
 		for (int i = 0; i < tempData.size(); i++)
 		{
 			userWidget* tempWidget = new userWidget(0);
-			connect(tempWidget, &userWidget::clicked, [=]() {
+			connect(tempWidget, &userWidget::clicked, [=](bool bType) {
 				// 点击了某用户后，此时才可发送信息。caiji
+				CurUserData::chatType = bType;
 				CurUserData::curChosenUser = tempWidget->getData();
 				m_ui.lb_name->setText(CurUserData::curChosenUser.sUserName + "(" 
 					+ QString::number(CurUserData::curChosenUser.id) 
 					+ ")    ip:" 
 					+ CurUserData::curChosenUser.sIp
-					+"状态:"+ (CurUserData::curChosenUser.bifOnLine?"在线":"离线"));
+					+"状态:"+ (CurUserData::curChosenUser.bifOnLine?"在线":"离线") + "    好友");
 
 				m_ui.btn_send->setEnabled(true);
 				m_ui.plainTextEdit->clear();
@@ -281,27 +339,24 @@ void SimpleChat::initChatGroupList()
 		}
 	}
 
-	QList<stChatGroup> groupsInfo;
-	int iState = m_dbManager->GetAllMyChatGroupInfo(CurUserData::curUserInfo.id, groupsInfo);
+	int iState = m_dbManager->GetAllMyChatGroupInfo(CurUserData::curUserInfo.id, CurUserData::thoseGroupsWhatIAmIn);
 	if (iState == Success)
 	{
-		for (int i = 0; i < groupsInfo.size(); i++)
+		for (int i = 0; i < CurUserData::thoseGroupsWhatIAmIn.size(); i++)
 		{
 			userWidget* tempWidget = new userWidget(0);
-			connect(tempWidget, &userWidget::clicked, [=]() {
+			connect(tempWidget, &userWidget::clicked, [=](bool bType) {
+				CurUserData::chatType = bType;
 				// 点击了某用户后，此时才可发送信息。caiji
-				CurUserData::curChosenUser = tempWidget->getData();
-				m_ui.lb_name->setText(CurUserData::curChosenUser.sUserName + "("
-					+ QString::number(CurUserData::curChosenUser.id)
-					+ ")    ip:"
-					+ CurUserData::curChosenUser.sIp
-					+ "状态:" + (CurUserData::curChosenUser.bifOnLine ? "在线" : "离线"));
+				CurUserData::curChatGroup = tempWidget->getGroupData();
+				m_ui.lb_name->setText(CurUserData::curChatGroup.sNickName + "("
+					+ QString::number(CurUserData::curChatGroup.id)+ ")    群聊");
 
 				m_ui.btn_send->setEnabled(true);
 				m_ui.plainTextEdit->clear();
 				});
 			m_ui.chatGroupLayout->addWidget(tempWidget);
-			tempWidget->setGroupData(groupsInfo[i]);
+			tempWidget->setGroupData(CurUserData::thoseGroupsWhatIAmIn[i]);
 		}
 	}
 }

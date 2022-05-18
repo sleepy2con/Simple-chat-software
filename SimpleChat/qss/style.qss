@@ -1,19 +1,40 @@
 QWidget
 {
+	background-color:rgb(255,255,255);
+	border-radius:5px;
+}
 
+QLineEdit,QPlainTextEdit
+{
+	border:1px solid rgb(224,224,224);
+	padding:6px 10px 6px 10px;
+	border-radius:3px;
+}
+QLineEdit::focus
+{
+border:1px solid rgb(32,112,255);
+}
+
+#bodyLayout,QTabWidget
+{
+	border:1px solid rgb(32,112,255);
+}
+#bodyLayout_3
+{
+	background-color:red;
 }
 
 QStackedWidget
 {
-	border:1px solid black;
+	
 }
 
 QPushButton,QPushButton:pressed
 {
-	padding:3px 15px 3px 15px;
+	padding:6px 15px 6px 15px;
 	background-color:rgb(30,111,255);
 	color:white;
-	border:1px solid black;
+	border:1px solid white;
 }
 QPushButton::hover
 {
@@ -50,11 +71,33 @@ QPushButton::hover
 }
 #userWidgetItem QLabel
 {
-	border:1px solid black;
+	border-radius:0px;
+	background-color:rgb(248,249,249);
 }
-#userWidgetItem:hover,#userWidgetItem QLabel:hover
+#userWidgetItem:hover,#userWidgetItem QLabel:hover,#lb_headPic
 {
 	border:1px solid black;
 	background-color:rgb(240,240,240);
 }
+#btn_addfri,#btn_addgroup
+{
+	background-color:rgba(0,0,0,0);
+	color:black;
+	border:none;
+}
 
+#btn_addfri:pressed,#btn_addfri:checked,#btn_addgroup:pressed,#btn_addgroup:checked
+{
+	background-color:white;
+	border:none;
+	border-bottom:2px solid rgb(30,111,255);
+	color:rgb(30,111,255);
+	border-radius:0;
+	padding:3px 16px 3px 16px;
+}
+
+#Baseframe
+{
+	border:1px solid black;
+	outline:red;
+}

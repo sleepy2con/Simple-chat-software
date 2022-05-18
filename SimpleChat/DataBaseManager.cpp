@@ -288,7 +288,7 @@ int DataBaseManager::GetAllMyChatGroupInfo(int id, QList<stChatGroup>& groupInfo
 		m_dataBase.close();
 		return QueryExecFailed;
 	}
-
+	groupInfoList.clear();
 	while (query.next())
 	{
 		stChatGroup stTempData;

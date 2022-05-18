@@ -103,14 +103,16 @@ struct stGroupRelation
 	QDateTime exitTime;
 };
 
-// 
+// 全局变量
 class CurUserData
 {
 public:
 	static int iPubPort4Udp;
-	static ST_UserInfo curUserInfo;
-	static ST_friendInfo curChosenUser;
-
+	static ST_UserInfo curUserInfo;			//登录后储存自己信息
+	static ST_friendInfo curChosenUser;		// 单对单聊天时储存对面信息
+	static stChatGroup curChatGroup;		// 群聊时储存当前群组的临时信息；
+	static bool chatType;		// 当前聊天类型，是群聊还是单对单，1-user,0-group;
+	static QList<stChatGroup> thoseGroupsWhatIAmIn;	// 自己加入的群聊id List
 };
 
 #endif
