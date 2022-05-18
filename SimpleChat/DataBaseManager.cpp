@@ -372,8 +372,37 @@ int DataBaseManager::insertChatGroupRelation(const stGroupRelation& stData)
 		return DBIsNotOpen;
 	}
 
+	// 判断是否有群聊
 	QSqlQuery query(m_dataBase);
-	QString sSql = "insert into chatgroup_relation(group_id,user_id,addTime) VALUES(?,?,?)";
+	QString sSql = "select count(*) from chatgroup where group_id=?";
+	query.prepare(sSql);
+	query.bindValue(0, stData.igroupId);
+	if (!query.exec())
+	{
+		m_dataBase.close();
+		return QueryExecFailed;
+	}
+	if (query.next())
+	{
+		return CouldFindTheGroup;
+	}
+
+	// 判断是否已经加入该群聊了
+	sSql = "select count(*) from chatgroup_relation where group_id=? and user_id =?";
+	query.prepare(sSql);
+	query.bindValue(0, stData.igroupId);
+	query.bindValue(1, stData.memberId);
+	if (!query.exec())
+	{
+		m_dataBase.close();
+		return QueryExecFailed;
+	}
+	if (query.next())
+	{
+		return AlreadyHaveThisGroupRelation;	
+	}
+	// 加入群聊
+	sSql = "insert into chatgroup_relation(group_id,user_id,addTime) VALUES(?,?,?)";
 
 	query.prepare(sSql);
 	query.bindValue(0, stData.igroupId);

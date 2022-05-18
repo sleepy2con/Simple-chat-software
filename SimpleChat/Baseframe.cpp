@@ -2,13 +2,16 @@
 
 #include <windows.h>        //注意头文件
 #include <windowsx.h>
-
+#include <QGraphicsDropShadowEffect>
+#include <QPainter>
 
 Baseframe::Baseframe(QWidget *parent)
 	: QWidget(parent), m_iWinType(0)
 {
 	m_ui.setupUi(this);
 	this->setWindowFlags(Qt::FramelessWindowHint);
+    
+
 }
 
 Baseframe::~Baseframe()
@@ -34,7 +37,7 @@ void Baseframe::on_btn_zoom_clicked()
 }
 void Baseframe::addWidget2Content(QWidget* ptr)
 {
-	m_ui.bodyLayout->addWidget(ptr);
+	m_ui.bodyLayout_3->addWidget(ptr);
 }
 
 void Baseframe::setWindowType(int wType)
@@ -86,3 +89,4 @@ void Baseframe::mouseReleaseEvent(QMouseEvent* event)
         m_bDrag = false;
     }
 }
+

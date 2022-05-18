@@ -215,7 +215,7 @@ void SimpleChat::initConnect()
 	// 每隔十秒重新刷新好友状态。
 	connect(m_timer, &QTimer::timeout, [=]() {
 		initFriendList();
-		//initChatGroupList();
+		initChatGroupList();
 		});
 }
 
@@ -273,6 +273,7 @@ void SimpleChat::initChatGroupList()
 		while (m_ui.chatGroupLayout->count())
 		{
 			iTemp = m_ui.chatGroupLayout->count();
+
 			QWidget* p = m_ui.chatGroupLayout->itemAt(0)->widget();
 			p->setParent(NULL);
 			m_ui.chatGroupLayout->removeWidget(p);
@@ -367,6 +368,18 @@ void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 	case CreateGroupSuccess:
 		QMessageBox::information(0, tr("成功"), tr("创建群聊成功"));
 		break;
+
+	case insertGroupRelationSuccess:
+		QMessageBox::information(0, tr("成功"), tr("加入群聊成功"));
+		break;
+	
+	case AlreadyHaveThisGroupRelation:
+		QMessageBox::warning(0, tr("警告"), tr("已经加入过群聊了"));
+		break;
+	case CouldFindTheGroup:
+		QMessageBox::warning(0, tr("警告"), tr("无法找到该群聊"));
+		break;
+
 	default:
 		break;
 	}

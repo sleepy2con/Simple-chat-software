@@ -29,7 +29,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="loginPage">
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -63,14 +63,22 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="le_username"/>
+          <widget class="QLineEdit" name="le_username">
+           <property name="placeholderText">
+            <string>用户名</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QLineEdit" name="le_password"/>
+          <widget class="QLineEdit" name="le_password">
+           <property name="placeholderText">
+            <string>密码</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="btn_login">
@@ -154,13 +162,25 @@
      <widget class="QWidget" name="registerPage">
       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,1,0,0">
        <item>
-        <widget class="QLineEdit" name="le_username_2"/>
+        <widget class="QLineEdit" name="le_username_2">
+         <property name="placeholderText">
+          <string>用户名</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="le_password_1"/>
+        <widget class="QLineEdit" name="le_password_1">
+         <property name="placeholderText">
+          <string>密码</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="le_confirm"/>
+        <widget class="QLineEdit" name="le_confirm">
+         <property name="placeholderText">
+          <string>密码</string>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="verticalSpacer_5">

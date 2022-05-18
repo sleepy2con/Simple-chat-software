@@ -3,14 +3,14 @@
   <Class Name="DataBaseManager">
     <Position X="0.75" Y="3.75" Width="4.25" />
     <TypeIdentifier>
-      <HashCode>IgAAAAAAACAgBAACEAAAIAkMAwCAABAiAAAAgACQAAA=</HashCode>
+      <HashCode>IgAAAAACACAgBAACEABAIAkMAwCQABAiAAAAgACQAAA=</HashCode>
       <FileName>DataBaseManager.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SimpleChat">
     <Position X="9" Y="0.75" Width="4.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAIAgACAAAQAQAAAAAAQIAAIAgQAgAABAAQAAAAQ=</HashCode>
+      <HashCode>BAAAAIIgACAAAQAQAAAAAAQIAAIAgQAgAABAAQAAAAQ=</HashCode>
       <FileName>SimpleChat.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -31,7 +31,7 @@
   <Class Name="userWidget">
     <Position X="4.25" Y="0.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAEQAAAAAAAAEAAAAAAAAABAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAEQAAAAAAAAEAAAAIAAAABAAAAAAgAAACAAAAAAAAA=</HashCode>
       <FileName>userWidget.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -70,11 +70,11 @@
       <FileName>pubStruct.h</FileName>
     </TypeIdentifier>
   </Struct>
-  <Enum Name="__unnamed_enum_0189_1">
-    <Position X="14" Y="0.75" Width="2.5" />
+  <Enum Name="__unnamed_enum_0147_1">
+    <Position X="7.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAABAQCBAAAAAAAAIAgAAgAAABAAABgAAAAAABA=</HashCode>
-      <FileName>pubStruct.h</FileName>
+      <HashCode>QAAAAAAAAAAAAAAAAAAEAAAAAAAAAABAAAAAAQAAAAA=</HashCode>
+      <FileName>Baseframe.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="ChatMsgType">
@@ -84,11 +84,11 @@
       <FileName>pubStruct.h</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="__unnamed_enum_0147_1">
-    <Position X="7.25" Y="1.25" Width="1.5" />
+  <Enum Name="__unnamed_enum_0189_1">
+    <Position X="14" Y="0.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>QAAAAAAAAAAAAAAAAAAEAAAAAAAAAABAAAAAAQAAAAA=</HashCode>
-      <FileName>Baseframe.h</FileName>
+      <HashCode>AAAAAAABAQCBAAAQAAAAIAgAAkgAABAAQBgAAAAAABA=</HashCode>
+      <FileName>pubStruct.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Microsoft YaHei UI" Size="9" />

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>431</width>
-    <height>126</height>
+    <width>432</width>
+    <height>78</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,6 +42,9 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
+         <property name="autoExclusive">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -51,6 +54,9 @@
          </property>
          <property name="checkable">
           <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -72,7 +78,11 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLineEdit" name="le_add"/>
+        <widget class="QLineEdit" name="le_add">
+         <property name="placeholderText">
+          <string>请输入一个账号</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="btn_add">

@@ -67,6 +67,9 @@ enum
 	insertGroupRelationSuccess,
 
 	updateChatGroupMembersInfoSuccess,
+
+	AlreadyHaveThisGroupRelation,
+	CouldFindTheGroup,
 };
 enum ChatMsgType { ChatMsg, OnLine, OffLine, SfileName, RefFile };//消息类型
 
