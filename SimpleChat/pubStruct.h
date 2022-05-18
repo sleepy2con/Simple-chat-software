@@ -65,6 +65,8 @@ enum
 	// 群
 	CreateGroupSuccess,
 	insertGroupRelationSuccess,
+
+	updateChatGroupMembersInfoSuccess,
 };
 enum ChatMsgType { ChatMsg, OnLine, OffLine, SfileName, RefFile };//消息类型
 
@@ -83,8 +85,9 @@ struct stChatGroup
 {
 	int id;
 	int iOwnId;
-	QList<QPair<int, QString>> members;		// 用来存储群组成员
+	QMap<QString,int> members;		// 用来存储群组成员
 	QString sNickName;
+	QDateTime addTime;
 	//stChatGroup& operator=(const stChatGroup& data);
 };
 

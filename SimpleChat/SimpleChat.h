@@ -31,6 +31,7 @@ private:
 
 	void initConnect();
 	void initFriendList();	//	刷新显示好友列表
+	void initChatGroupList();
 
 	void initUdpSocket();
 

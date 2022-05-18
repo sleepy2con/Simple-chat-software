@@ -43,10 +43,11 @@ public:
 
 	// 群聊相关操作
 	int CreateChatGroup(const stChatGroup& chatName);
+	int upDateChatGroupMemberInfo(int groupid);		// 查询所有群组内人员，并设置members；
 
 	int insertChatGroupRelation(const stGroupRelation& stData);
 
-	int GetAllMyChatGroupInfo(int id);
+	int GetAllMyChatGroupInfo(int id,QList<stChatGroup>& groupInfoList);
 
 
 

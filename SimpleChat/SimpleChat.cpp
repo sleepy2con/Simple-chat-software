@@ -189,7 +189,7 @@ void SimpleChat::initUdpSocket()
 
 void SimpleChat::initConnect()
 {
-
+	initChatGroupList();
 	// 监视Qss文件当发生变动时自动重新加载QSS
 
 	m_fileWatcher = new QFileSystemWatcher();
@@ -215,6 +215,7 @@ void SimpleChat::initConnect()
 	// 每隔十秒重新刷新好友状态。
 	connect(m_timer, &QTimer::timeout, [=]() {
 		initFriendList();
+		//initChatGroupList();
 		});
 }
 
@@ -263,6 +264,47 @@ void SimpleChat::initFriendList()
 
 }
 
+void SimpleChat::initChatGroupList()
+{
+	if (m_ui.chatGroupLayout)
+	{
+		//clearWidgets(templayout);
+		int iTemp = m_ui.chatGroupLayout->count();
+		while (m_ui.chatGroupLayout->count())
+		{
+			iTemp = m_ui.chatGroupLayout->count();
+			QWidget* p = m_ui.chatGroupLayout->itemAt(0)->widget();
+			p->setParent(NULL);
+			m_ui.chatGroupLayout->removeWidget(p);
+			delete p; // 清除内存
+		}
+	}
+
+	QList<stChatGroup> groupsInfo;
+	int iState = m_dbManager->GetAllMyChatGroupInfo(CurUserData::curUserInfo.id, groupsInfo);
+	if (iState == Success)
+	{
+		for (int i = 0; i < groupsInfo.size(); i++)
+		{
+			userWidget* tempWidget = new userWidget(0);
+			connect(tempWidget, &userWidget::clicked, [=]() {
+				// 点击了某用户后，此时才可发送信息。caiji
+				CurUserData::curChosenUser = tempWidget->getData();
+				m_ui.lb_name->setText(CurUserData::curChosenUser.sUserName + "("
+					+ QString::number(CurUserData::curChosenUser.id)
+					+ ")    ip:"
+					+ CurUserData::curChosenUser.sIp
+					+ "状态:" + (CurUserData::curChosenUser.bifOnLine ? "在线" : "离线"));
+
+				m_ui.btn_send->setEnabled(true);
+				m_ui.plainTextEdit->clear();
+				});
+			m_ui.chatGroupLayout->addWidget(tempWidget);
+			tempWidget->setGroupData(groupsInfo[i]);
+		}
+	}
+}
+
 void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 {
 	//QMessageBox::question(0, "", QString::number(iStateNum));	// 用来测试
@@ -273,8 +315,10 @@ void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 		m_pLoginWidget->hide();
 		m_baseframe->show();
 		initFriendList();
+
 		m_dbManager->getUserInfo(SimpleChat::iCurUserId, CurUserData::curUserInfo);
 		m_ui.btn_headPic->setText(CurUserData::curUserInfo.sUserName);
+		initChatGroupList();
 		break;
 	}
 	case DBIsNotOpen:

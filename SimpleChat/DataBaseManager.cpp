@@ -3,11 +3,16 @@
 #include "DataBaseManager.h"
 #include "SimpleChat.h"
 #include <QMessageBox>
+#include <QJsonObject>
+#include <QPair>
+#include <QList>
+
 DataBaseManager::DataBaseManager()
 {
 	//qDebug() << QSqlDatabase::drivers();	
 	// 读取数据库配置文件
-	m_sHost = "43.138.67.149";	// 
+	//m_sHost = "43.138.67.149";	// 云服务器
+	m_sHost = "192.168.171.1";
 	m_iPort = 3306;
 	m_sDBName = "simplechatdb";
 	m_sUserName = "root";
@@ -255,14 +260,108 @@ int DataBaseManager::changeOnlineStatus(int id, bool b)
 		qDebug() << "sqlquery.exe执行失败";
 		m_dataBase.close();
 		return QueryExecFailed;
-		return QueryExecFailed;
 	}
 	return Success;
 }
 
-int DataBaseManager::GetAllMyChatGroupInfo(int id)
+int DataBaseManager::GetAllMyChatGroupInfo(int id, QList<stChatGroup>& groupInfoList)
 {
-	return 0;
+	if (!openDB())
+	{
+		qDebug() << "数据库未打开";
+		return DBIsNotOpen;
+	}
+
+	QSqlQuery query(m_dataBase);
+
+	// 判断数据库中是否已存在记录
+	QString sSql = "select chatgroup.nickName,chatgroup.members,chatgroup.GroupOwnerID,\
+		chatgroup.id, chatgroup_relation.addTime from chatgroup\
+		inner join chatgroup_relation\
+		on chatgroup.id = chatgroup_relation.group_id where user_id = ?";
+
+	query.prepare(sSql);
+	query.bindValue(0, id);
+	if (!query.exec())
+	{
+		qDebug() << "sqlquery.exe执行失败";
+		m_dataBase.close();
+		return QueryExecFailed;
+	}
+
+	while (query.next())
+	{
+		stChatGroup stTempData;
+
+		QMap<QString,QVariant> members;		// 用来存储群组成员
+
+
+		stTempData.sNickName = query.value(0).toString();
+		QString tempMemData = query.value(1).toString();
+
+		QVariant tempVariant(query.value(2).toString());
+		members = tempVariant.toMap();
+		for (auto i = members.begin(); i != members.end(); i++)
+		{
+			QMap<QString, int> tempNode;
+			tempNode.insert(i.key(), i.value().toInt());
+			stTempData.members.insert(tempNode);
+		}
+
+		stTempData.iOwnId = query.value(2).toInt();
+		stTempData.id = query.value(3).toInt();
+		stTempData.addTime = QDateTime::fromString(query.value(4).toString(), "yyyy-MM-dd hh:mm:ss");;
+		groupInfoList.append(stTempData);
+	}
+	return Success;
+}
+
+int DataBaseManager::upDateChatGroupMemberInfo(int id)
+{
+	if (!openDB())
+	{
+		qDebug() << "数据库未打开";
+		return DBIsNotOpen;
+	}
+
+	QSqlQuery query(m_dataBase);
+
+	// 判断数据库中是否已存在记录
+	QString sSql = "SELECT user.id,user.username FROM user \
+		inner join chatgroup_relation on user.id = chatgroup_relation.user_id\
+	where chatgroup_relation.group_id = ?";
+
+	query.prepare(sSql);
+	query.bindValue(0, id);
+
+	if (!query.exec())
+	{
+		qDebug() << "sqlquery.exe执行失败";
+		m_dataBase.close();
+		return QueryExecFailed;
+	}
+
+	// 转换QString
+	QMap<QString, QVariant> groupMembers;
+	while (query.next())
+	{
+		groupMembers.insert(query.value(1).toString(), query.value(0).toInt());
+	}
+	QVariant tempVar(groupMembers);
+	QString strMem = tempVar.toString();
+
+	sSql = "update chatgroup set members = ? where id = ?";
+	query.prepare(sSql);
+	query.bindValue(0, strMem);
+	query.bindValue(1, id);
+	if (!query.exec())
+	{
+		qDebug() << "sqlquery.exe执行失败";
+		m_dataBase.close();
+		return QueryExecFailed;
+	}
+
+	return updateChatGroupMembersInfoSuccess;
 }
 
 int DataBaseManager::insertChatGroupRelation(const stGroupRelation& stData)
@@ -279,7 +378,7 @@ int DataBaseManager::insertChatGroupRelation(const stGroupRelation& stData)
 	query.prepare(sSql);
 	query.bindValue(0, stData.igroupId);
 	query.bindValue(1, stData.memberId);
-	query.bindValue(1, stData.memberId);
+	query.bindValue(2, QDateTime::currentDateTime());
 
 	if (!query.exec())
 	{
@@ -287,6 +386,13 @@ int DataBaseManager::insertChatGroupRelation(const stGroupRelation& stData)
 		return QueryExecFailed;
 	}
 	m_dataBase.close();
+
+	// 每次有人加入群后都添加信息到members里
+	if (upDateChatGroupMemberInfo(stData.igroupId) != updateChatGroupMembersInfoSuccess)
+	{
+		return QueryExecFailed;
+	}
+
 	return insertGroupRelationSuccess;
 }
 
@@ -304,6 +410,7 @@ int DataBaseManager::CreateChatGroup(const stChatGroup& stdata)
 	query.prepare(sSql);
 	query.bindValue(0, stdata.sNickName);
 	query.bindValue(1, stdata.iOwnId);
+
 	if (!query.exec())
 	{
 		m_dataBase.close();

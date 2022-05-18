@@ -11,6 +11,7 @@ public:
 	userWidget(QWidget *parent = Q_NULLPTR);
 	~userWidget();
 	void setData(const ST_friendInfo& tempData);
+	void setGroupData(const stChatGroup& tempData);
 	ST_friendInfo getData() { return m_thisGuyInfo; }
 protected:
 	virtual void mouseReleaseEvent(QMouseEvent* ev);
@@ -19,4 +20,5 @@ signals:
 private:
 	Ui::userWidget ui;
 	ST_friendInfo m_thisGuyInfo;
+	stChatGroup m_thisGroupInfo;
 };
