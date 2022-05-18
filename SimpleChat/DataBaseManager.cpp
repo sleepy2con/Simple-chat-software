@@ -374,7 +374,7 @@ int DataBaseManager::insertChatGroupRelation(const stGroupRelation& stData)
 
 	// 判断是否有群聊
 	QSqlQuery query(m_dataBase);
-	QString sSql = "select count(*) from chatgroup where group_id=?";
+	QString sSql = "select count(*) from chatgroup where id=?";
 	query.prepare(sSql);
 	query.bindValue(0, stData.igroupId);
 	if (!query.exec())
@@ -382,9 +382,11 @@ int DataBaseManager::insertChatGroupRelation(const stGroupRelation& stData)
 		m_dataBase.close();
 		return QueryExecFailed;
 	}
-	if (query.next())
+	// select count肯定有值，值为0或者大于0
+	query.next();
+	if (query.value(0).toInt() == 0)
 	{
-		return CouldFindTheGroup;
+		return CouldNotFindTheGroup;		// 无法找到群聊
 	}
 
 	// 判断是否已经加入该群聊了
@@ -397,10 +399,12 @@ int DataBaseManager::insertChatGroupRelation(const stGroupRelation& stData)
 		m_dataBase.close();
 		return QueryExecFailed;
 	}
-	if (query.next())
+	query.next();
+	if (query.value(0).toInt() != 0)
 	{
-		return AlreadyHaveThisGroupRelation;	
+		return AlreadyHaveThisGroupRelation;		// 
 	}
+
 	// 加入群聊
 	sSql = "insert into chatgroup_relation(group_id,user_id,addTime) VALUES(?,?,?)";
 

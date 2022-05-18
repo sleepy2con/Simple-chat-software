@@ -69,7 +69,7 @@ enum
 	updateChatGroupMembersInfoSuccess,
 
 	AlreadyHaveThisGroupRelation,
-	CouldFindTheGroup,
+	CouldNotFindTheGroup,
 };
 enum ChatMsgType { ChatMsg, OnLine, OffLine, SfileName, RefFile };//消息类型
 

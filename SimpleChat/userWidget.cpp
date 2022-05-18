@@ -27,6 +27,11 @@ void userWidget::setGroupData(const stChatGroup& tempData)
 	whatIam = 0;
 }
 
+void userWidget::setOnline()
+{
+	this->setStyleSheet("QLabel{background-color:rgb(61,128,109);color:white;border:1px solid black;}");
+}
+
 void userWidget::mouseReleaseEvent(QMouseEvent* ev) {
 	emit clicked(whatIam);
 }

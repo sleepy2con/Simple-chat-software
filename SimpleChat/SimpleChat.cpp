@@ -274,6 +274,7 @@ void SimpleChat::initConnect()
 		initFriendList();
 		initChatGroupList();
 		});
+	m_ui.tabWidget->setCurrentIndex(0);
 }
 
 void SimpleChat::initFriendList()
@@ -309,12 +310,16 @@ void SimpleChat::initFriendList()
 					+ ")    ip:" 
 					+ CurUserData::curChosenUser.sIp
 					+"状态:"+ (CurUserData::curChosenUser.bifOnLine?"在线":"离线") + "    好友");
-
 				m_ui.btn_send->setEnabled(true);
 				m_ui.plainTextEdit->clear();
 				});
+
 			m_ui.friListLayout->addWidget(tempWidget);
 			tempWidget->setData(tempData[i]);
+			if (tempData[i].bifOnLine)
+			{
+				tempWidget->setOnline();
+			}
 		}
 	}
 	//QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -385,6 +390,7 @@ void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 	case QueryExecFailed:
 	{
 		qDebug() << tr("数据库语句执行失败");
+		QMessageBox::warning(0, tr("错误"), tr("数据库语句执行失败"));
 		break;
 	}
 	case QueryCountLessThan0:
@@ -431,7 +437,7 @@ void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 	case AlreadyHaveThisGroupRelation:
 		QMessageBox::warning(0, tr("警告"), tr("已经加入过群聊了"));
 		break;
-	case CouldFindTheGroup:
+	case CouldNotFindTheGroup:
 		QMessageBox::warning(0, tr("警告"), tr("无法找到该群聊"));
 		break;
 

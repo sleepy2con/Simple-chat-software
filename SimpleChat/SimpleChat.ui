@@ -101,7 +101,7 @@
           <item>
            <layout class="QVBoxLayout" name="friListLayout">
             <property name="spacing">
-             <number>0</number>
+             <number>10</number>
             </property>
             <property name="sizeConstraint">
              <enum>QLayout::SetDefaultConstraint</enum>
@@ -144,7 +144,11 @@
            <number>0</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="chatGroupLayout"/>
+           <layout class="QVBoxLayout" name="chatGroupLayout">
+            <property name="spacing">
+             <number>10</number>
+            </property>
+           </layout>
           </item>
           <item>
            <spacer name="verticalSpacer_3">

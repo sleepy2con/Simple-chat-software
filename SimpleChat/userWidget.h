@@ -12,6 +12,7 @@ public:
 	~userWidget();
 	void setData(const ST_friendInfo& tempData);
 	void setGroupData(const stChatGroup& tempData);
+	void setOnline();
 
 protected:
 	virtual void mouseReleaseEvent(QMouseEvent* ev);
