@@ -186,8 +186,8 @@ void SimpleChat::initUdpSocket()
 			QString tempStr;
 			stUdpContentHeader tempData;
 			read >> tempData >> tempStr;
-			// 如果是好友聊天的话。
-			if (tempData.msgType ==BetweenUsers)
+			// 如果是好友聊天的话。其他消息都过滤
+			if (tempData.msgType ==BetweenUsers&& CurUserData::chatType == true)
 			{
 				// 判断接受者是否是自己。
 				if (tempData.receiverId != CurUserData::curUserInfo.id)
@@ -206,7 +206,7 @@ void SimpleChat::initUdpSocket()
 				m_ui.plainTextEdit->appendPlainText(tempStr); //添加文本
 				m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);      //滚轮自动移动到末端    
 			}
-			else if(tempData.msgType == GroupType)
+			else if(tempData.msgType == GroupType&& CurUserData::chatType == false)
 			{
 				bool yesItHas = 0;
 				// 判断接受信息的群聊是否是自己拥有群聊，
