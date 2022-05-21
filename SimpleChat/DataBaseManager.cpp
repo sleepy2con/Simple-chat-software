@@ -10,6 +10,8 @@
 DataBaseManager::DataBaseManager()
 {
 	//qDebug() << QSqlDatabase::drivers();	
+	//QString str = QSqlDatabase::drivers().join(", ");
+	//QMessageBox::information(0, "", str);
 	// 读取数据库配置文件
 	//m_sHost = "43.138.67.149";	// 云服务器
 	m_sHost = "192.168.171.1";

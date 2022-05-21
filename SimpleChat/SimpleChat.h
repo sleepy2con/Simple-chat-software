@@ -37,6 +37,8 @@ private:
 
 	void ResponseByDifferentStateNum(int iStateNum);
 
+	void clearWidget(QVBoxLayout* layout);
+
 private:
 	Ui::MainWindow m_ui;
 	LoginWidget* m_pLoginWidget;

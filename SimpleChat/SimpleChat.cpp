@@ -187,7 +187,7 @@ void SimpleChat::initUdpSocket()
 			stUdpContentHeader tempData;
 			read >> tempData >> tempStr;
 			// 如果是好友聊天的话。
-			if (tempData.msgType)
+			if (tempData.msgType ==BetweenUsers)
 			{
 				// 判断接受者是否是自己。
 				if (tempData.receiverId != CurUserData::curUserInfo.id)
@@ -206,7 +206,7 @@ void SimpleChat::initUdpSocket()
 				m_ui.plainTextEdit->appendPlainText(tempStr); //添加文本
 				m_ui.plainTextEdit->scrollBarWidgets(Qt::AlignBottom);      //滚轮自动移动到末端    
 			}
-			else
+			else if(tempData.msgType == GroupType)
 			{
 				bool yesItHas = 0;
 				// 判断接受信息的群聊是否是自己拥有群聊，
@@ -280,19 +280,7 @@ void SimpleChat::initConnect()
 void SimpleChat::initFriendList()
 {
 	// clear;
-	if (m_ui.friListLayout)
-	{
-		//clearWidgets(templayout);
-		int iTemp = m_ui.friListLayout->count();
-		while (m_ui.friListLayout->count())
-		{
-			iTemp = m_ui.friListLayout->count();
-			QWidget* p = m_ui.friListLayout->itemAt(0)->widget();
-			p->setParent(NULL);
-			m_ui.friListLayout->removeWidget(p);
-			delete p; // 清除内存
-		}
-	}
+	clearWidget(m_ui.friListLayout);
 
 	QList<ST_friendInfo> tempData;
 	int iStateNum = m_dbManager->getFriendsList(SimpleChat::iCurUserId, tempData);
@@ -309,7 +297,7 @@ void SimpleChat::initFriendList()
 					+ QString::number(CurUserData::curChosenUser.id) 
 					+ ")    ip:" 
 					+ CurUserData::curChosenUser.sIp
-					+"状态:"+ (CurUserData::curChosenUser.bifOnLine?"在线":"离线") + "    好友");
+					+"状态:"+ (CurUserData::curChosenUser.bifOnLine?"在线":"离线") + (CurUserData::chatType? "    好友" :"    群聊"));
 				m_ui.btn_send->setEnabled(true);
 				m_ui.plainTextEdit->clear();
 				});
@@ -329,20 +317,7 @@ void SimpleChat::initFriendList()
 
 void SimpleChat::initChatGroupList()
 {
-	if (m_ui.chatGroupLayout)
-	{
-		//clearWidgets(templayout);
-		int iTemp = m_ui.chatGroupLayout->count();
-		while (m_ui.chatGroupLayout->count())
-		{
-			iTemp = m_ui.chatGroupLayout->count();
-
-			QWidget* p = m_ui.chatGroupLayout->itemAt(0)->widget();
-			p->setParent(NULL);
-			m_ui.chatGroupLayout->removeWidget(p);
-			delete p; // 清除内存
-		}
-	}
+	clearWidget(m_ui.chatGroupLayout);
 
 	int iState = m_dbManager->GetAllMyChatGroupInfo(CurUserData::curUserInfo.id, CurUserData::thoseGroupsWhatIAmIn);
 	if (iState == Success)
@@ -355,7 +330,7 @@ void SimpleChat::initChatGroupList()
 				// 点击了某用户后，此时才可发送信息。caiji
 				CurUserData::curChatGroup = tempWidget->getGroupData();
 				m_ui.lb_name->setText(CurUserData::curChatGroup.sNickName + "("
-					+ QString::number(CurUserData::curChatGroup.id)+ ")    群聊");
+					+ QString::number(CurUserData::curChatGroup.id)+ (CurUserData::chatType ? "    好友" : "    群聊"));
 
 				m_ui.btn_send->setEnabled(true);
 				m_ui.plainTextEdit->clear();
@@ -445,5 +420,22 @@ void SimpleChat::ResponseByDifferentStateNum(int iStateNum)
 		break;
 	}
 
+}
+
+void SimpleChat::clearWidget(QVBoxLayout* layout)
+{
+	if (layout)
+	{
+		//clearWidgets(templayout);
+		int iTemp = layout->count();
+		while (layout->count())
+		{
+			iTemp = layout->count();
+			QWidget* p = layout->itemAt(0)->widget();
+			p->setParent(NULL);
+			layout->removeWidget(p);
+			delete p; // 清除内存
+		}
+	}
 }
 
